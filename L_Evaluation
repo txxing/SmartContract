@@ -1,0 +1,109 @@
+
+contract LogisticCompanyReputation{
+   function UpdateReputation(uint _score) public;
+}
+
+contract L_Evaluation{
+    uint[] L_RepVal;
+    uint public T;
+    address public Regulators=0x17245817d1D2C437B083B55bAe5Ff52900cC6bEa;
+    uint32 _ID;
+    uint _M;
+
+    uint[] public L_Rep=[3];
+  
+   
+    mapping (address => bool) public Address;
+  
+
+ 
+    
+    modifier onlyRegulators(){ 
+        require(msg.sender==Regulators);
+        _;
+    }
+    
+    event CompletedEvaluation(string info);    
+    
+    function Authentication(address _address)  onlyRegulators{
+        Address[_address]=true;
+    }
+ 
+    
+   // function Authentication(address _address) onlyRegulators{
+   //     len=Address.length;
+     //   Address[len]=_address;
+  //  }
+    
+    function Evaluation(uint _Lscore){
+        if(Address[msg.sender]==true)
+        {
+             L_RepVal.push(_Lscore);
+             CompletedEvaluation("Evaluation of success");
+             return;
+        }
+        CompletedEvaluation("Not qualified for evaluation");
+        return;
+    } 
+     function _Sum(uint[] RepVal)  internal returns (uint) { 
+         uint Sum;
+         for(uint i=0;i<RepVal.length;i++)
+         {
+             Sum+=RepVal[i];
+         }
+         return Sum;
+     }
+     function _Delete(uint[] RepVal)internal  {
+         for(uint i=0;i<RepVal.length;i++)
+         {
+             delete RepVal[i];
+         }    
+     }
+     
+   function percent(uint numerator, uint denominator, uint precision) public 
+
+   returns(uint quotient) {
+
+         // caution, check safe-to-multiply here
+        uint _numerator  = numerator * 10 ** (precision+1);
+        // with rounding of last digit
+        uint _quotient =  ((_numerator / denominator) + 5) / 10;
+        return ( _quotient);
+    }
+
+     
+     function CalculateReputation() onlyRegulators{
+        uint  L_Sum=0;
+        uint  L_Ave=0;
+        uint  a;
+        uint  A=100;
+        uint L=0;
+         L_Sum=_Sum(L_RepVal);
+         
+         L_Ave=percent(L_Sum,L_RepVal.length,2);
+
+        uint L_Len=L_Rep.length;
+         
+         uint j=0;
+
+        for(uint i=L_Len;i>0;i--)
+         {
+             a=percent(1,3**(L_Len-j),2);
+             L=L+(a*L_Rep[j]);
+             A=A+a;
+             j++;
+         }
+         L=L_Ave+L;
+         L=percent(L,A,2);
+         L_Rep.push(L);
+         
+        LogisticCompanyReputation Rep = LogisticCompanyReputation(0x4578991aC7fA8308B79aD9E7284B9112dB578c18);
+        Rep.UpdateReputation(L);
+        _Delete(L_RepVal);
+     }
+}
+
+
+
+
+
