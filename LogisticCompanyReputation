@@ -1,0 +1,9 @@
+
+contract LogisticCompanyReputation{
+   
+    uint public RS;
+    
+    function UpdateReputation(uint _score){
+        RS=_score;
+    }
+}
