@@ -1,0 +1,13 @@
+pragma solidity ^0.4.24;
+
+contract MerchantReputation{
+    
+   mapping(uint32=>uint) public RS;
+    
+    
+    function UpdateReputation(uint32 _ID,uint _score){
+        RS[_ID]=_score;
+    }
+}
+
+
